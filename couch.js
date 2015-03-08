@@ -189,6 +189,16 @@
                         var _rev = ddoc._rev
                         var url = '/' + encodeURIComponent(name) + '/_design/' + encodeURIComponent(_id) + obj2query(opt, {rev: _rev})
                         couchdb['delete'](url, undefined, cb)
+                    },
+
+                    attachment: function(name) {
+                        // TODO
+                        return {
+                            head: undefined,
+                            get: undefined,
+                            put: undefined,
+                            'delete': undefined
+                        }
                     }
                 }
             }

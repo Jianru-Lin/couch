@@ -158,36 +158,42 @@
     }
 
     couchdb.db = function(name) {
+
         return {
-            _design: {
-                
-                head: undefined,    // TODO
+            _design: function() {
+                var _design_args = arguments
 
-                // #cb(status, headers, resObj)
-                // many arguments can be specified in opt, see couchdb document
-                get: function(docid, opt, cb) {
-                    var url = '/' + encodeURIComponent(name) + '/_design/' + encodeURIComponent(docid) + obj2query(opt)
-                    couchdb.get(url, undefined, cb)
-                },
+                return {
 
-                // #cb(status, headers, resObj)
-                // many arguments can be specified in opt, see couchdb document
-                put: function(ddoc, opt, cb) {
-                    var url = '/' + encodeURIComponent(name) + '/_design/' + encodeURIComponent(ddoc._id) + obj2query(opt)
-                    couchdb.put(url, undefined, ddoc, cb)
-                },
+                    head: undefined,    // TODO
 
-                // #cb(status, headers, resObj)
-                // many arguments can be specified in opt, see couchdb document
-                // ddoc: {_id, _rev}
-                'delete': function(ddoc, opt, cb) {
-                    var _id = ddoc._id
-                    var _rev = ddoc._rev
-                    var url = '/' + encodeURIComponent(name) + '/_design/' + encodeURIComponent(_id) + obj2query(opt, {rev: _rev})
-                    couchdb['delete'](url, undefined, cb)
+                    // _design(docid).get(opt, cb)
+                    get: function(opt, cb) {
+                        var docid = _design_args[0]
+                        var url = '/' + encodeURIComponent(name) + '/_design/' + encodeURIComponent(docid) + obj2query(opt)
+                        couchdb.get(url, undefined, cb)
+                    },
+
+                    // _design(ddoc).put(opt, cb)
+                    put: function(opt, cb) {
+                        var ddoc = _design_args[0]
+                        var url = '/' + encodeURIComponent(name) + '/_design/' + encodeURIComponent(ddoc._id) + obj2query(opt)
+                        couchdb.put(url, undefined, ddoc, cb)
+                    },
+
+                    // _design(ddoc).delete(opt, cb)
+                    // ddoc: {_id, _rev}
+                    'delete': function(opt, cb) {
+                        var ddoc = _design_args[0]
+                        var _id = ddoc._id
+                        var _rev = ddoc._rev
+                        var url = '/' + encodeURIComponent(name) + '/_design/' + encodeURIComponent(_id) + obj2query(opt, {rev: _rev})
+                        couchdb['delete'](url, undefined, cb)
+                    }
                 }
             }
         }
+
     }
     
     // you can provide multiple obj
@@ -216,12 +222,12 @@
 
 onload = function() {
     couchdb.signin('anna', 'secret', function() {
-        couchdb.db('apple-rabbit')._design.put({
-            _id: 'xxx'
-        })
+        couchdb.db('apple-rabbit')._design({
+            _id: 'zzz'
+        }).put()
     })
     //couchdb.put('/xxx')
     //couchdb.signout()
     //couchdb._uuids(undefined)
-    //couchdb.db('apple-rabbit')._design.get('xxx')
+    //couchdb.db('apple-rabbit')._design('xxx').get()
 }

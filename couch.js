@@ -164,21 +164,64 @@
                 head: undefined,    // TODO
 
                 // #cb(status, headers, resObj)
-                get: function(docid, cb) {
-                    var url = '/' + encodeURIComponent(name) + '/_design/' + encodeURIComponent(docid)
+                // many arguments can be specified in opt, see couchdb document
+                get: function(docid, opt, cb) {
+                    var url = '/' + encodeURIComponent(name) + '/_design/' + encodeURIComponent(docid) + obj2query(opt)
                     couchdb.get(url, undefined, cb)
+                },
+
+                // #cb(status, headers, resObj)
+                // many arguments can be specified in opt, see couchdb document
+                put: function(ddoc, opt, cb) {
+                    var url = '/' + encodeURIComponent(name) + '/_design/' + encodeURIComponent(ddoc._id) + obj2query(opt)
+                    couchdb.put(url, undefined, ddoc, cb)
+                },
+
+                // #cb(status, headers, resObj)
+                // many arguments can be specified in opt, see couchdb document
+                // ddoc: {_id, _rev}
+                'delete': function(ddoc, opt, cb) {
+                    var _id = ddoc._id
+                    var _rev = ddoc._rev
+                    var url = '/' + encodeURIComponent(name) + '/_design/' + encodeURIComponent(_id) + obj2query(opt, {rev: _rev})
+                    couchdb['delete'](url, undefined, cb)
                 }
             }
         }
     }
+    
+    // you can provide multiple obj
+    function obj2query() {
+        if (arguments.length < 1) {
+            return ''
+        }
+        var query = []
+        for (var i = 0, len = arguments.length; i < len; ++i) {
+            obj = arguments[i] || {}
+            for (var name in obj) {
+                var value = obj[name]
+                query.push(encodeURIComponent(name) + '=' + encodeURIComponent(value))
+            }
+        }
+        query = query.join('&')
+        query = query ? ('?' + query) : query
+        return query
+    }
+    
+    // test only
+    // window.obj2query = obj2query
 })();
 
 // test
 
 onload = function() {
-    //couchdb.signin('anna', 'secret')
+    couchdb.signin('anna', 'secret', function() {
+        couchdb.db('apple-rabbit')._design.put({
+            _id: 'xxx'
+        })
+    })
     //couchdb.put('/xxx')
     //couchdb.signout()
     //couchdb._uuids(undefined)
-    couchdb.db('apple-rabbit')._design.get('xxx')
+    //couchdb.db('apple-rabbit')._design.get('xxx')
 }

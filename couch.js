@@ -140,11 +140,10 @@
         }
     }
 
-    
     // extension
     
     // #cb(status, headers, resObj)
-    window.couchdb.uuids = function(count, cb) {
+    window.couchdb._uuids = function(count, cb) {
         var query = (count !== undefined ? ('?count=' + encodeURIComponent(count)) : '')
         couchdb.get('/_uuids' + query, null, function(status, headers, resObj) {
             if (status.code !== 200) {
@@ -163,5 +162,5 @@ onload = function() {
     //couchdb.signin('anna', 'secret')
     //couchdb.put('/xxx')
     //couchdb.signout()
-    couchdb.uuids(undefined)
+    couchdb._uuids(undefined)
 }

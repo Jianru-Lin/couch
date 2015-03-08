@@ -141,9 +141,11 @@
     }
 
     // extension
+
+    var couchdb = window.couchdb
     
     // #cb(status, headers, resObj)
-    window.couchdb._uuids = function(count, cb) {
+    couchdb._uuids = function(count, cb) {
         var query = (count !== undefined ? ('?count=' + encodeURIComponent(count)) : '')
         couchdb.get('/_uuids' + query, null, function(status, headers, resObj) {
             if (status.code !== 200) {
@@ -154,6 +156,21 @@
             }
         })
     }
+
+    couchdb.db = function(name) {
+        return {
+            _design: {
+                
+                head: undefined,    // TODO
+
+                // #cb(status, headers, resObj)
+                get: function(docid, cb) {
+                    var url = '/' + encodeURIComponent(name) + '/_design/' + encodeURIComponent(docid)
+                    couchdb.get(url, undefined, cb)
+                }
+            }
+        }
+    }
 })();
 
 // test
@@ -162,5 +179,6 @@ onload = function() {
     //couchdb.signin('anna', 'secret')
     //couchdb.put('/xxx')
     //couchdb.signout()
-    couchdb._uuids(undefined)
+    //couchdb._uuids(undefined)
+    couchdb.db('apple-rabbit')._design.get('xxx')
 }

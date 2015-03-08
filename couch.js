@@ -199,6 +199,16 @@
                             put: undefined,
                             'delete': undefined
                         }
+                    },
+
+                    _info: function() {
+                        // TODO
+                        return {
+                            head: undefined,
+                            get: undefined,
+                            put: undefined,
+                            'delete': undefined
+                        }
                     }
                 }
             }

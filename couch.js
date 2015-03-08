@@ -48,9 +48,10 @@
         return ajax('DELETE', url, headers, undefined, cb)
     }
 
+    // essential
+    
     window.couchdb = {
         baseUrl: 'http://localhost:5984',
-        cb: undefined,
         signin: function(name, password, cb) {
             var absUrl = this.baseUrl + '/_session'
             var headers = {
@@ -103,7 +104,6 @@
             ajax['delete'](absUrl, headers, this._cbProxy(cb))
         },
         _cbProxy: function(cb) {
-            cb = cb || this.cb
             return function(status, headers, body) {
                 try {
                     body = JSON.parse(body)
@@ -113,36 +113,55 @@
                     body = undefined
                 }
                 if (cb) cb(status, headers, body)
+        
+                // debug purpose only
+                
+                dumpResponse(status, headers, body)
+                
+                function dumpResponse(status, headers, body) {
+                    log(status.code + ' ' + status.text)
+                    log(headers)
+                    log(typeof body === 'object' ? JSON.stringify(body, null, 4) : body)
+                    hr()
+                    function log(text) {
+                        if (typeof text === 'object') {
+                            text = JSON.stringify(text, null, 4)
+                        }
+                        
+                        var e = document.createElement('pre')
+                        e.textContent = text
+                        document.body.appendChild(e)
+                    }
+                    function hr() {
+                        document.body.appendChild(document.createElement('hr'))
+                    }
+                }
             }
         }
+    }
+
+    
+    // extension
+    
+    // #cb(status, headers, resObj)
+    window.couchdb.uuids = function(count, cb) {
+        var query = (count !== undefined ? ('?count=' + encodeURIComponent(count)) : '')
+        couchdb.get('/_uuids' + query, null, function(status, headers, resObj) {
+            if (status.code !== 200) {
+                return
+            }
+            if (cb) {
+                cb(status, headers, resObj)
+            }
+        })
     }
 })();
 
 // test
 
-function showResult(status, headers, body) {
-    log(status.code + ' ' + status.text)
-    log(headers)
-    log(typeof body === 'object' ? JSON.stringify(body, null, 4) : body)
-    hr()
-    function log(text) {
-        if (typeof text === 'object') {
-            text = JSON.stringify(text, null, 4)
-        }
-        
-        var e = document.createElement('pre')
-        e.textContent = text
-        document.body.appendChild(e)
-    }
-    function hr() {
-        document.body.appendChild(document.createElement('hr'))
-    }
-}
-
-couchdb.cb = showResult
-
 onload = function() {
     //couchdb.signin('anna', 'secret')
     //couchdb.put('/xxx')
     //couchdb.signout()
+    couchdb.uuids(undefined)
 }

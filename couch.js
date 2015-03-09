@@ -243,13 +243,21 @@
 // test
 
 onload = function() {
-    // couchdb.signin('anna', 'secret', function() {
-    //     couchdb.db('apple-rabbit')._design({
-    //         _id: 'zzz'
-    //     }).put()
-    // })
+    couchdb.signin('anna', 'secret', function() {
+        couchdb.db('apple-rabbit')._design({
+            _id: 'myddoc',
+            language: 'javascript',
+            views: {
+                by_name: {
+                    map: function(doc) {
+                        emit(doc.name, doc)
+                    }.toString()
+                }
+            }
+        }).put()
+    })
     //couchdb.put('/xxx')
     //couchdb.signout()
-    couchdb._uuids(10).get()
+    //couchdb._uuids(10).get()
     //couchdb.db('apple-rabbit')._design('xxx').get()
 }

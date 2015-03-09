@@ -159,6 +159,14 @@
         }
     }
 
+    couchdb._all_dbs = function() {
+        return {
+            get: function(cb) {
+                couchdb.get('/_all_dbs', null, cb)
+            }
+        }
+    }
+
     couchdb.db = function(name) {
 
         return {
@@ -243,21 +251,22 @@
 // test
 
 onload = function() {
-    couchdb.signin('anna', 'secret', function() {
-        couchdb.db('apple-rabbit')._design({
-            _id: 'myddoc',
-            language: 'javascript',
-            views: {
-                by_name: {
-                    map: function(doc) {
-                        emit(doc.name, doc)
-                    }.toString()
-                }
-            }
-        }).put()
-    })
+    // couchdb.signin('anna', 'secret', function() {
+    //     couchdb.db('apple-rabbit')._design({
+    //         _id: 'myddoc',
+    //         language: 'javascript',
+    //         views: {
+    //             by_name: {
+    //                 map: function(doc) {
+    //                     emit(doc.name, doc)
+    //                 }.toString()
+    //             }
+    //         }
+    //     }).put()
+    // })
     //couchdb.put('/xxx')
     //couchdb.signout()
     //couchdb._uuids(10).get()
     //couchdb.db('apple-rabbit')._design('xxx').get()
+    couchdb._all_dbs().get()
 }

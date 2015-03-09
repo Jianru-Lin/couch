@@ -166,6 +166,18 @@
     couchdb.db = function(name) {
 
         return {
+            
+            _all_docs: function() {
+                return {
+                    // _all_docs().get(opt, cb)
+                    get: function(opt, cb) {
+                        var url = '/' + encodeURIComponent(name) + '/_all_docs' + obj2query(opt)
+                        couchdb.get(url, undefined, cb)
+                    },
+                    post: undefined     // TODO
+                }
+            },
+            
             _design: function() {
                 var _design_args = arguments
 
@@ -262,7 +274,8 @@ onload = function() {
     // })
     //couchdb.put('/xxx')
     //couchdb.signout()
-    couchdb._uuids(10).get()
+    //couchdb._uuids(10).get()
+    couchdb.db('apple-rabbit')._all_docs().get()
     //couchdb.db('apple-rabbit')._design('xxx').get()
     //couchdb._all_dbs().get()
 }

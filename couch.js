@@ -145,16 +145,18 @@
     var couchdb = window.couchdb
     
     // #cb(status, headers, resObj)
-    couchdb._uuids = function(count, cb) {
-        var query = (count !== undefined ? ('?count=' + encodeURIComponent(count)) : '')
-        couchdb.get('/_uuids' + query, null, function(status, headers, resObj) {
-            if (status.code !== 200) {
-                return
+    couchdb._uuids = function(count) {
+        
+        return {
+            get: function(cb) {
+                var query = (count !== undefined ? ('?count=' + encodeURIComponent(count)) : '')
+                couchdb.get('/_uuids' + query, null, function(status, headers, resObj) {
+                    if (cb) {
+                        cb(status, headers, resObj)
+                    }
+                })
             }
-            if (cb) {
-                cb(status, headers, resObj)
-            }
-        })
+        }
     }
 
     couchdb.db = function(name) {
@@ -241,13 +243,13 @@
 // test
 
 onload = function() {
-    couchdb.signin('anna', 'secret', function() {
-        couchdb.db('apple-rabbit')._design({
-            _id: 'zzz'
-        }).put()
-    })
+    // couchdb.signin('anna', 'secret', function() {
+    //     couchdb.db('apple-rabbit')._design({
+    //         _id: 'zzz'
+    //     }).put()
+    // })
     //couchdb.put('/xxx')
     //couchdb.signout()
-    //couchdb._uuids(undefined)
+    couchdb._uuids(10).get()
     //couchdb.db('apple-rabbit')._design('xxx').get()
 }

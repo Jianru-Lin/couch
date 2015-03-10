@@ -53,21 +53,6 @@
     window.couchdb = {
         baseUrl: 'http://localhost:5984',
         debug: function(status, headers, body) {},
-        signin: function(name, password, cb) {
-            var absUrl = this.baseUrl + '/_session'
-            var headers = {
-                'Content-Type': 'application/json;charset=utf-8'
-            }
-            var reqObj = {
-                name: name, 
-                password: password
-            }
-            ajax.post(absUrl, headers, JSON.stringify(reqObj), this._cbProxy(cb))
-        },
-        signout: function(cb) {
-            var absUrl = this.baseUrl + '/_session'
-            ajax['delete'](absUrl, null, this._cbProxy(cb))
-        },
         // # cb(status, headers, resObj)
         get: function(url, headers, cb) {
             var absUrl = this.baseUrl + url
@@ -217,6 +202,20 @@
             }
         }
 
+    }
+    
+    // alias
+    
+    couchdb.signin =function(name, password, cb) {
+        var reqObj = {
+            name: name, 
+            password: password
+        }
+        couchdb._session(reqObj).post(null, cb)
+    }
+    
+    couchdb.signout = function(cb) {
+        couchdb._session()['delete']()
     }
     
     // you can provide multiple obj

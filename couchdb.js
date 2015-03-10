@@ -136,11 +136,7 @@
         return {
             get: function(cb) {
                 var query = (count !== undefined ? ('?count=' + encodeURIComponent(count)) : '')
-                couchdb.get('/_uuids' + query, null, function(status, headers, resObj) {
-                    if (cb) {
-                        cb(status, headers, resObj)
-                    }
-                })
+                couchdb.get('/_uuids' + query, null, cb)
             }
         }
     }

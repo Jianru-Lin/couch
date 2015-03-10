@@ -147,8 +147,12 @@
                 var query = obj2query(opt)
                 couchdb.get('/_session' + query, null, cb)
             },
-            post: function(cb) {
+            // _session(obj).post(opt, cb)
+            post: function(opt, cb) {
                 // TODO
+            },
+            'delete': function(cb) {
+                couchdb['delete']('/_session', null, cb)
             }
         }
     }

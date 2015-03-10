@@ -52,6 +52,7 @@
     
     window.couchdb = {
         baseUrl: 'http://localhost:5984',
+        debug: function(status, headers, body) {},
         signin: function(name, password, cb) {
             var absUrl = this.baseUrl + '/_session'
             var headers = {
@@ -105,6 +106,7 @@
             ajax['delete'](absUrl, headers, this._cbProxy(cb))
         },
         _cbProxy: function(cb) {
+            var self = this
             return function(status, headers, body) {
                 try {
                     body = JSON.parse(body)
@@ -116,26 +118,9 @@
                 if (cb) cb(status, headers, body)
         
                 // debug purpose only
-                
-                dumpResponse(status, headers, body)
-                
-                function dumpResponse(status, headers, body) {
-                    log(status.code + ' ' + status.text)
-                    log(headers)
-                    log(typeof body === 'object' ? JSON.stringify(body, null, 4) : body)
-                    hr()
-                    function log(text) {
-                        if (typeof text === 'object') {
-                            text = JSON.stringify(text, null, 4)
-                        }
-                        
-                        var e = document.createElement('pre')
-                        e.textContent = text
-                        document.body.appendChild(e)
-                    }
-                    function hr() {
-                        document.body.appendChild(document.createElement('hr'))
-                    }
+
+                if (self.debug) {
+                    self.debug(status, headers, body)
                 }
             }
         }
@@ -242,6 +227,25 @@
 })();
 
 // test
+
+couchdb.debug = function(status, headers, body) {
+    log(status.code + ' ' + status.text)
+    log(headers)
+    log(typeof body === 'object' ? JSON.stringify(body, null, 4) : body)
+    hr()
+    function log(text) {
+        if (typeof text === 'object') {
+            text = JSON.stringify(text, null, 4)
+        }
+        
+        var e = document.createElement('pre')
+        e.textContent = text
+        document.body.appendChild(e)
+    }
+    function hr() {
+        document.body.appendChild(document.createElement('hr'))
+    }
+}
 
 onload = function() {
     couchdb.signin('anna', 'secret', function() {

@@ -221,48 +221,4 @@
         query = query ? ('?' + query) : query
         return query
     }
-    
-    // test only
-    // window.obj2query = obj2query
 })();
-
-// test
-
-couchdb.debug = function(status, headers, body) {
-    log(status.code + ' ' + status.text)
-    log(headers)
-    log(typeof body === 'object' ? JSON.stringify(body, null, 4) : body)
-    hr()
-    function log(text) {
-        if (typeof text === 'object') {
-            text = JSON.stringify(text, null, 4)
-        }
-        
-        var e = document.createElement('pre')
-        e.textContent = text
-        document.body.appendChild(e)
-    }
-    function hr() {
-        document.body.appendChild(document.createElement('hr'))
-    }
-}
-
-onload = function() {
-    couchdb.signin('anna', 'secret', function() {
-        // couchdb.db('apple-rabbit')._design({
-        //     _id: 'myddoc',
-        //     language: 'javascript',
-        //     views: {
-        //         map: {
-        //             by_name: function(doc) {
-        //                 emit(doc.name, doc)
-        //             }.toString()
-        //         }
-        //     }
-        // }).put()
-    })
-    //couchdb.put('/xxx')
-    //couchdb.signout()
-    //couchdb._uuids(10).get()
-    //couchdb.db('apple-rabbit')._design('xxx').get()
-}

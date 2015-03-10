@@ -147,8 +147,9 @@
 
     couchdb._session = function() {
         return {
-            get: function(cb) {
-                // TODO
+            get: function(opt, cb) {
+                var query = obj2query(opt)
+                couchdb.get('/_session' + query, null, cb)
             },
             post: function(cb) {
                 // TODO

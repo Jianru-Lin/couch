@@ -76,9 +76,10 @@
         post: function(url, headers, reqObj, cb) {
             var absUrl = this.baseUrl + url
             // reqObj is optional
+            // set content-type always, or we will fail in some cases
+            headers = headers || {}
+            headers['Content-Type'] = 'application/json;charset=utf-8'
             if (reqObj) {
-                headers = headers || {}
-                headers['Content-Type'] = 'application/json;charset=utf-8'
                 ajax.post(absUrl, headers, JSON.stringify(reqObj), this._cbProxy(cb))
             }
             else {
@@ -150,15 +151,11 @@
         return {
             get: function(cb) {
                 var query = (count !== undefined ? ('?count=' + encodeURIComponent(count)) : '')
-                couchdb.get('/_uuids' + query, null, cb)
-            }
-        }
-    }
-
-    couchdb._all_dbs = function() {
-        return {
-            get: function(cb) {
-                couchdb.get('/_all_dbs', null, cb)
+                couchdb.get('/_uuids' + query, null, function(status, headers, resObj) {
+                    if (cb) {
+                        cb(status, headers, resObj)
+                    }
+                })
             }
         }
     }
@@ -166,18 +163,6 @@
     couchdb.db = function(name) {
 
         return {
-            
-            _all_docs: function() {
-                return {
-                    // _all_docs().get(opt, cb)
-                    get: function(opt, cb) {
-                        var url = '/' + encodeURIComponent(name) + '/_all_docs' + obj2query(opt)
-                        couchdb.get(url, undefined, cb)
-                    },
-                    post: undefined     // TODO
-                }
-            },
-            
             _design: function() {
                 var _design_args = arguments
 
@@ -259,23 +244,21 @@
 // test
 
 onload = function() {
-    // couchdb.signin('anna', 'secret', function() {
-    //     couchdb.db('apple-rabbit')._design({
-    //         _id: 'myddoc',
-    //         language: 'javascript',
-    //         views: {
-    //             by_name: {
-    //                 map: function(doc) {
-    //                     emit(doc.name, doc)
-    //                 }.toString()
-    //             }
-    //         }
-    //     }).put()
-    // })
+    couchdb.signin('anna', 'secret', function() {
+        // couchdb.db('apple-rabbit')._design({
+        //     _id: 'myddoc',
+        //     language: 'javascript',
+        //     views: {
+        //         map: {
+        //             by_name: function(doc) {
+        //                 emit(doc.name, doc)
+        //             }.toString()
+        //         }
+        //     }
+        // }).put()
+    })
     //couchdb.put('/xxx')
     //couchdb.signout()
     //couchdb._uuids(10).get()
-    couchdb.db('apple-rabbit')._all_docs().get()
     //couchdb.db('apple-rabbit')._design('xxx').get()
-    //couchdb._all_dbs().get()
 }

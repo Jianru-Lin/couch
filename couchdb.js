@@ -145,6 +145,17 @@
         }
     }
 
+    couchdb._session = function() {
+        return {
+            get: function(cb) {
+                // TODO
+            },
+            post: function(cb) {
+                // TODO
+            }
+        }
+    }
+
     couchdb.db = function(name) {
 
         return {

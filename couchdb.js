@@ -147,15 +147,44 @@
     }
 
     couchdb.db = function(name) {
+        var db_args = arguments
 
         return {
+            doc: function() {
+                var doc_args = arguments
+                return {
+                    head: undefined,    // TODO
+                    // doc(docid).get(opt, cb)
+                    get: function(opt, cb) {
+                        var query = obj2query(opt)
+                        var docid = doc_args[0]
+                        var url = '/' + name + '/' + docid + query
+                        couchdb.get(url, null, cb)
+                    },
+                    // doc(doc).put(opt, cb)
+                    put: function(opt, cb) {
+                        var query = obj2query(opt)
+                        var doc = doc_args[0]
+                        var url = '/' + name + '/' + doc._id + query
+                        couchdb.put(url, null, doc, cb)
+                    },
+                    // doc(doc).delete(opt, cb)
+                    'delete': function(opt, cb) {
+                        var doc = doc_args[0]
+                        var query = obj2query(opt, {rev: doc._rev})
+                        var url = '/' + name + '/' + doc._id + query
+                        couchdb['delete'](url, null, cb)
+                    }
+                }
+            },
+            
             _design: function() {
                 var _design_args = arguments
 
                 return {
 
                     head: undefined,    // TODO
-
+                    
                     // _design(docid).get(opt, cb)
                     get: function(opt, cb) {
                         var docid = _design_args[0]

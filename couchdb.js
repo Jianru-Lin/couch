@@ -124,7 +124,7 @@
         
         return {
             get: function(cb) {
-                var query = (count !== undefined ? ('?count=' + encodeURIComponent(count)) : '')
+                var query = (count !== undefined ? ('?count=' + encuc(count)) : '')
                 couchdb.get('/_uuids' + query, null, cb)
             }
         }
@@ -192,14 +192,14 @@
                     // _design(docid).get(opt, cb)
                     get: function(opt, cb) {
                         var docid = _design_args[0]
-                        var url = '/' + encodeURIComponent(name) + '/' + encodeURIComponent(docid) + obj2query(opt)
+                        var url = '/' + encuc(name) + '/' + encuc(docid) + obj2query(opt)
                         couchdb.get(url, undefined, cb)
                     },
 
                     // _design(ddoc).put(opt, cb)
                     put: function(opt, cb) {
                         var ddoc = _design_args[0]
-                        var url = '/' + encodeURIComponent(name) + '/' + encodeURIComponent(ddoc._id) + obj2query(opt)
+                        var url = '/' + encuc(name) + '/' + encuc(ddoc._id) + obj2query(opt)
                         couchdb.put(url, undefined, ddoc, cb)
                     },
 
@@ -209,7 +209,7 @@
                         var ddoc = _design_args[0]
                         var _id = ddoc._id
                         var _rev = ddoc._rev
-                        var url = '/' + encodeURIComponent(name) + '/' + encodeURIComponent(_id) + obj2query(opt, {rev: _rev})
+                        var url = '/' + encuc(name) + '/' + encuc(_id) + obj2query(opt, {rev: _rev})
                         couchdb['delete'](url, undefined, cb)
                     },
 
@@ -303,7 +303,7 @@
             obj = arguments[i] || {}
             for (var name in obj) {
                 var value = obj[name]
-                query.push(encodeURIComponent(name) + '=' + encodeURIComponent(value))
+                query.push(encuc(name) + '=' + encuc(value))
             }
         }
         query = query.join('&')

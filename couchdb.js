@@ -188,7 +188,7 @@
                     // _design(docid).get(opt, cb)
                     get: function(opt, cb) {
                         var docid = _design_args[0]
-                        var url = '/' + encodeURIComponent(name) + '/_design/' + encodeURIComponent(docid) + obj2query(opt)
+                        var url = '/' + encodeURIComponent(name) + '/' + encodeURIComponent(docid) + obj2query(opt)
                         couchdb.get(url, undefined, cb)
                     },
 
@@ -205,7 +205,7 @@
                         var ddoc = _design_args[0]
                         var _id = ddoc._id
                         var _rev = ddoc._rev
-                        var url = '/' + encodeURIComponent(name) + '/_design/' + encodeURIComponent(_id) + obj2query(opt, {rev: _rev})
+                        var url = '/' + encodeURIComponent(name) + '/' + encodeURIComponent(_id) + obj2query(opt, {rev: _rev})
                         couchdb['delete'](url, undefined, cb)
                     },
 

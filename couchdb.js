@@ -195,7 +195,7 @@
                     // _design(ddoc).put(opt, cb)
                     put: function(opt, cb) {
                         var ddoc = _design_args[0]
-                        var url = '/' + encodeURIComponent(name) + '/_design/' + encodeURIComponent(ddoc._id) + obj2query(opt)
+                        var url = '/' + encodeURIComponent(name) + '/' + encodeURIComponent(ddoc._id) + obj2query(opt)
                         couchdb.put(url, undefined, ddoc, cb)
                     },
 

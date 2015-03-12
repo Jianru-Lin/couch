@@ -227,6 +227,26 @@
                             put: undefined,
                             'delete': undefined
                         }
+                    },
+                    
+                    _view: function() {
+                        // TODO
+                    },
+                    
+                    _show: function() {
+                        // TODO
+                    },
+                    
+                    _list: function() {
+                        // TODO
+                    },
+                    
+                    _update: function() {
+                        // TODO
+                    },
+                    
+                    _rewrite: function() {
+                        // TODO
                     }
                 }
             }

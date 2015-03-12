@@ -1,4 +1,8 @@
 ﻿;(function() {
+    // alias
+    var encuc = encodeURIComponent
+    var decuc = decodeURIComponent
+    
     // # cb(status, headers, body)
     function ajax(method, url, headers, body, cb) {
         cb = cb || function() {}
@@ -230,7 +234,28 @@
                     },
                     
                     _view: function() {
-                        // TODO
+                        var _view_args = arguments
+                        return {
+                            // _view(name, req).post(opt, cb)
+                            get: function(opt, cb) {
+                                var dbName = db_args[0]
+                                var designId = _design_args[0]
+                                var viewName = _view_args[0]
+                                var query = obj2query(opt)
+                                var url = '/' + encuc(dbName) + '/' + encuc(designId) + '/_view/' + encuc(viewName) + query
+                                couchdb.get(url, null, cb)
+                            },
+                            // _view(name, req).post(opt, cb)
+                            post: function(opt, cb) {
+                                var dbName = db_args[0]
+                                var designId = _design_args[0]
+                                var viewName = _view_args[0]
+                                var req = _view_args[1]
+                                var query = obj2query(opt)
+                                var url = '/' + encuc(dbName) + '/' + encuc(designId) + '/_view/' + encuc(viewName) + query
+                                couchdb.post(url, null, req, cb)
+                            }
+                        }
                     },
                     
                     _show: function() {

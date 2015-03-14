@@ -290,7 +290,7 @@
     }
     
     couchdb.signout = function(cb) {
-        couchdb._session()['delete']()
+        couchdb._session()['delete'](cb)
     }
     
     // you can provide multiple obj

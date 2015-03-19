@@ -55,7 +55,7 @@
     // essential
     
     window.couchdb = {
-        baseUrl: 'http://localhost:5984',
+        baseUrl: '',
         debug: function(status, headers, body) {},
         // # cb(status, headers, resObj)
         get: function(url, headers, cb) {
